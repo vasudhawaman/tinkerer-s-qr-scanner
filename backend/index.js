@@ -4,16 +4,18 @@ const app=express();
 const path=require('path');
 const cookieParser=require('cookie-parser');
 const mongoose=require('mongoose');
+// make this an ASYNC function named dbConnect and not .then method
 mongoose.connect("mongodb://localhost:27017/tLab").then(()=>{console.log("Server connected")});
 const userRoute=require('./routes/user');
 
 //Middlewares
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
-app.use(checkForAuthenticationCookie("token"));
+app.use(checkForAuthenticationCookie("token"));  // WE are using header-token method bearer method and not cookies. Make  those changes
 // app.use(isAdmin);
 // app.use(isUser);
 
+// No need for EJS. Use POSTMAN/thunderclient for testing 
 app.set("view engine","ejs");
 app.set("views",path.resolve("./views"));
 
@@ -25,4 +27,6 @@ app.get("/",(req,res)=>{
 
 app.use("/user",userRoute);
 
-app.listen("3000",()=>console.log("Server Started Successfully."));
+//port make it a variable and NOT 3000 .Use port 8000
+const port = 8000 ;
+app.listen(port,()=>console.log("Server Started Successfully."));
