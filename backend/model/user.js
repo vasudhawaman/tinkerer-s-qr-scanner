@@ -1,5 +1,6 @@
 const {Schema,model}=require('mongoose');
 const { createTokenForUser } = require('../services/auth');
+const bycrpt = require('bcrypt');
 
 const userSchema=new Schema({
     email:{
@@ -7,7 +8,7 @@ const userSchema=new Schema({
         required:true,
         unique:true,
     },
-    password:{
+    password:{ // Hashed Password
         type:String,
         required:true,
     },
@@ -17,17 +18,17 @@ const userSchema=new Schema({
     },
     // isAdmin is either user or admin 
     isAdmin:{
-        type:String,
-        enum:["ADMIN","USER"],
-        default:"USER",
+        type:Boolean,
+        default:false,
     },
 },{timestamps:true});
 
 // matching password and generating token 
-// Error handaling for incorrect password is missing 
+// Error handaling for incorrect password is missing
 userSchema.static('matchPasswordAndGenerateToken',async function (email,password){
     const user=await this.findOne({email});
     if(!user) throw new Error("User Not Found!!");
+    else if(!bycrpt.compare(password, user.password)) throw new Error("Password Incorrect!");
     const token=createTokenForUser(user); // add error handaling here as well in case no token is generated
     return token;
 });

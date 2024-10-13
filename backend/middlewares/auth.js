@@ -1,4 +1,5 @@
 const { validateToken } = require("../services/auth");
+const User=require("../model/user");
 
 function checkForAuthenticationCookie(cookieName) {
   return (req, res, next) => {
@@ -13,5 +14,11 @@ function checkForAuthenticationCookie(cookieName) {
       return next();
   };
 }
+function isAdmin(req, res, next) {
+  if(User.findOne({email: req.body.email}).isAdmin){
+    return next();
+  }
+  return res.status(404).send("Page not found");
+}
 
-module.exports = {checkForAuthenticationCookie};
+module.exports = {checkForAuthenticationCookie, isAdmin};
