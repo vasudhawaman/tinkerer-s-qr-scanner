@@ -5,7 +5,7 @@ const path=require('path');
 const cookieParser=require('cookie-parser');
 const mongoose=require('mongoose');
 // make this an ASYNC function named dbConnect and not .then method
-mongoose.connect("mongodb://localhost:27017/tLab").then(()=>{console.log("Server connected")});
+mongoose.connect(process.env.MONGO_URL).then(()=>{console.log("Server connected")});
 const userRoute=require('./routes/user');
 
 //Middlewares
@@ -28,5 +28,5 @@ app.get("/",(req,res)=>{
 app.use("/user",userRoute);
 
 //port make it a variable and NOT 3000 .Use port 8000
-const port = 8000 ;
+const port = process.env.PORT;
 app.listen(port,()=>console.log("Server Started Successfully."));
