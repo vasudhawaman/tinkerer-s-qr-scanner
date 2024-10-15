@@ -14,8 +14,8 @@ function checkForAuthenticationCookie(cookieName) {
       return next();
   };
 }
-function isAdmin(req, res, next) {
-  if(User.findOne({email: req.body.email}).isAdmin){
+async function isAdmin(req, res, next) {
+  if(await User.findOne({email: req.body.email}).isAdmin){
     return next();
   }
   return res.status(404).send("Page not found");
