@@ -5,7 +5,11 @@ const path=require('path');
 const cookieParser=require('cookie-parser');
 const mongoose=require('mongoose');
 // make this an ASYNC function named dbConnect and not .then method
-mongoose.connect(process.env.MONGO_URL).then(()=>{console.log("Server connected")});
+async function dbConnect(path) {
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("MongoDB connected.")
+};
+dbConnect("mongodb://127.0.0.1:27017/TL");
 const userRoute=require('./routes/user');
 
 //Middlewares
