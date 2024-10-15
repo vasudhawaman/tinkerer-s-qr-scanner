@@ -6,10 +6,10 @@ const cookieParser=require('cookie-parser');
 const mongoose=require('mongoose');
 // make this an ASYNC function named dbConnect and not .then method
 async function dbConnect(path) {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(path);
     console.log("MongoDB connected.")
 };
-dbConnect("mongodb://127.0.0.1:27017/TL");
+dbConnect(process.env.MONGO_URL);
 const userRoute=require('./routes/user');
 
 //Middlewares
