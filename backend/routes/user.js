@@ -16,7 +16,6 @@ router.post("/login", async (req, res) => {
         return res.status(200).json({"token":token});
     }
     catch(error){
-        
         return res.status(400).json({"message":"Not found token!","error":error});
     }
 });
