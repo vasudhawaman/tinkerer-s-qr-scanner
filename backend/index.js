@@ -27,6 +27,5 @@ app.get("/",(req,res)=>{
 
 app.use("/user",userRoute);
 
-//port make it a variable and NOT 3000 .Use port 8000
 const port = process.env.PORT;
 app.listen(port,()=>console.log("Server Started Successfully."));
