@@ -1,7 +1,7 @@
 const jwt=require('jsonwebtoken');
 const secret = "Tinkerer_Lab@123";
 
-// add error handaling in case something goes wrong 
+//no error handling required as the function which is calling it, is itself in try, catch.
 function createTokenForUser(user){
     const payload={
         _id:user._id,

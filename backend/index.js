@@ -9,9 +9,7 @@ async function dbConnect(path) {
     await mongoose.connect(path);
     console.log("MongoDB connected.")
 };
-
-dbConnect("mongodb://127.0.0.1:27017/TL");
-
+dbConnect(process.env.MONGO_URL);
 const userRoute=require('./routes/user');
 const { db } = require('./model/user');
 
@@ -29,6 +27,5 @@ app.get("/",(req,res)=>{
 
 app.use("/user",userRoute);
 
-//port make it a variable and NOT 3000 .Use port 8000
-var port = 8000;
+const port = process.env.PORT;
 app.listen(port,()=>console.log("Server Started Successfully."));
