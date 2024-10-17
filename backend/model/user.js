@@ -27,8 +27,9 @@ const userSchema=new Schema({
 // Error handaling for incorrect password is missing
 userSchema.static('matchPasswordAndGenerateToken',async function (email,password){
     const user=await this.findOne({email});
+    console.log(user);
     if(!user) throw new Error("User Not Found!!");
-    else if(!bycrpt.compare(password, user.password)) throw new Error("Password Incorrect!");
+    else if(!(await bycrpt.compare(password, user.password))) throw new Error("Password Incorrect!");
     const token=createTokenForUser(user); // add error handaling here as well in case no token is generated
     return token;
 });

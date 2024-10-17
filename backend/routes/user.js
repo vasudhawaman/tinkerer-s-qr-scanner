@@ -9,10 +9,7 @@ router.get("/dashboard",(req,res)=>{
 
 // make all API routes using status codes and json response not rendering EJS.
 // USE postman/ thunder client for testing the API 
-router.post("/login", body('email').customSanitizer(value => {
-    let string = value.split("@");
-    return string[1];
-    }).equals('iiti.ac.in'), async (req, res) => {
+router.post("/login", body('email').isEmail({host_whitelist: ["iiti.ac.in"]}), async (req, res) => {
     const { email, password } = req.body;
     const result = validationResult(req);
     if(result.isEmpty()) {
