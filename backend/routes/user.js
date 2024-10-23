@@ -26,6 +26,12 @@ router.get("/allDevices", async (req,res) => {
     return res.status(200).json(devices);
 })
 
+router.get("/:id", async (req,res) => {
+    const user_id = req.params.id;
+    const item = await Item.find({userId: user_id});
+    return res.status(200).json(item);
+})
+
 router.post("/items", async (req, res) => {
     const { userId, deviceId } = req.body;
     try{
