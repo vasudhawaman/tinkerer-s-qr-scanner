@@ -10,7 +10,7 @@ const itemSchema=new Schema({
     },
     numberOfUses:{
         type:Number,
-        default:0,
+        default:1,
     },
     lastUsed:{
         type:String,
@@ -18,5 +18,5 @@ const itemSchema=new Schema({
     },
 }, {timestamps:true});
 
-const Item = model(itemSchema);
+const Item = model('item', itemSchema);
 module.exports=Item;

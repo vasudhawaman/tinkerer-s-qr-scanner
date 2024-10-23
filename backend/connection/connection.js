@@ -5,4 +5,4 @@ async function dbConnect(path) {
     console.log("MongoDB connected.");
 };
 
-module.exports=dbConnect();
+module.exports={dbConnect};

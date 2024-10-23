@@ -5,9 +5,6 @@ const cookieParser=require('cookie-parser');
 const userRoute=require('./routes/user');
 const { dbConnect }=require('./connection/connection')
 
-//Connection
-dbConnect(process.env.MONGO_URL);
-
 //Middlewares
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
@@ -19,5 +16,5 @@ app.get("/",(req,res)=>{
 
 app.use("/user",userRoute);
 
-const port = process.env.PORT;
+const port = 8000;
 app.listen(port,()=>console.log("Server Started Successfully."));
