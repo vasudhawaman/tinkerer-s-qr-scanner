@@ -17,7 +17,7 @@ export default function QrScanner() {
     setFacingMode((m) => (m === "user" ? "environment" : "user"));
 
   return (
-    <div className="flex gap-2 h-full">
+    <div className="flex gap-2 h-full flex-col-reverse md:flex-row">
       <div className="flex-1">
         <h3 className="text-center text-xl font-semibold">Device Info</h3>
         <div className="h-full w-full grid place-items-center">
@@ -25,7 +25,7 @@ export default function QrScanner() {
           {code}
         </div>
       </div>
-      <div className="border border-gray-400 min-h-full w-[1px]"></div>
+      <div className="border border-gray-400 md:min-h-full md:w-[1px]"></div>
       <div className="flex-1 flex flex-col items-center gap-5">
         <p className="text-red-600 text-center">{error}</p>
         <QrScannerFromCamera

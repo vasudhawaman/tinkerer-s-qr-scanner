@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import QrScannerLib from "qr-scanner";
 
 export default function QrScanner({ facingMode = "user", onScan, onError }) {
   const videoRef = useRef(null);
   const scanner = useRef(null);
+  const [startedPlaying, setStartedPlaying] = useState(false);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -17,7 +18,8 @@ export default function QrScanner({ facingMode = "user", onScan, onError }) {
       })
       .then((stream) => {
         videoRef.current.srcObject = stream;
-        videoRef.current.play();
+        setStartedPlaying(true);
+        videoRef.current.play().then(() => setStartedPlaying(false));
 
         scanner.current = new QrScannerLib(videoRef.current, onScan);
         scanner.current.start();
@@ -26,6 +28,7 @@ export default function QrScanner({ facingMode = "user", onScan, onError }) {
 
     return () => {
       if (!videoRef.current) return;
+      if (startedPlaying) return;
       console.log("DEstruction");
       videoRef.current.pause();
     };
