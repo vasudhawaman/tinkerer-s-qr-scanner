@@ -1,7 +1,7 @@
 
 import React from 'react'
 import img from '../assets/1.jpg'
-
+import Navbar from "../components/Navbar";
 const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen relative" style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
