@@ -5,18 +5,24 @@ const deviceSchema=new Schema({
         required:true,
         unique:true,
     },
-    category:{
-        type:String,
-        required:true,
-    },
     deviceImageURL:{
         type:String,
+        required:false,
+    },
+    inUse: {
+        type:String,
         required:true,
     },
-    clubAuthorized:{
+    name:{
         type:String,
+        required:true,
     },
+    lastUsed:{
+        type:String,
+        required:false,
+    }
 },{timestamps:true});
 
-const Device = model(deviceSchema);
+const Device = model("Device", deviceSchema);
+
 module.exports=Device;

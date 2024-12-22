@@ -6,7 +6,6 @@ function createTokenForUser(user){
     const payload={
         _id:user._id,
         email:user.email,
-        club:user.club,
     };
     const token=jwt.sign(payload,secret);
     return token;

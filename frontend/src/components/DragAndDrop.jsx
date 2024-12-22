@@ -1,8 +1,13 @@
-import React, { useCallback, useState,useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-
+import jsQR from 'jsqr'; // Use jsQR for QR code decoding
+import axios from 'axios';
+import Swal from 'sweetalert2';
 const FileUpload = () => {
   const [files, setFiles] = useState([]);
+  const [qrCode, setQrCode] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [scannedResult, setScannedResult] = useState(""); // To store scanned QR code result
 
   // Handle file drops
   const onDrop = useCallback((acceptedFiles) => {
@@ -12,8 +17,9 @@ const FileUpload = () => {
   // Initialize the dropzone
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'image/*,application/pdf', // Customize accepted file types as needed
+    accept: 'image/*', // Only accept image files for QR scanning
   });
+
   const styles = {
     container: {
       width: '100%',
@@ -23,7 +29,7 @@ const FileUpload = () => {
       textAlign: 'center',
     },
     dropzone: {
-       margin:'5px',
+      margin: '5px',
       padding: '40px',
       borderWidth: '2px',
       borderRadius: '10px',
@@ -37,8 +43,11 @@ const FileUpload = () => {
       marginTop: '20px',
       textAlign: 'left',
     },
+    qrCode: {
+      marginTop: '20px',
+      color: '#4CAF50',
+    },
   };
-  
 
   // Handle paste events
   const handlePaste = (event) => {
@@ -64,9 +73,68 @@ const FileUpload = () => {
     return () => document.removeEventListener('paste', handlePaste);
   }, []);
 
+  // Function to scan the image for QR code using jsQR
+  const scanQrCode = (file) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const img = new Image();
+      img.src = reader.result;
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context.drawImage(img, 0, 0, img.width, img.height);
+
+        const imageData = context.getImageData(0, 0, img.width, img.height);
+        const code = jsQR(imageData.data, img.width, img.height);
+
+        if (code) {
+          setScannedResult(code.data); // Set the QR code data
+          const onScanSuccess = async (code) => {
+            //console.log(result);
+            const deviceId = code.data;
+            try {
+                // Make the GET request to check if the device is in use
+                const response = await axios.get(`http://localhost:8000/device/${deviceId}/in-use`);
+                console.log(response);
+
+                // Handle the response
+                if (response.status === 200 &&response.data.inUse) {
+                    Swal.fire({
+                        title: "Device is in Use!",
+                        text: `You scanned ${deviceId}`,
+                        icon: "failure"
+                      });
+                } else if (response.status == 200) {
+                    const response = await axios.post(`http://localhost:8000/device/${deviceId}/change-status`);
+                }
+              } catch (error) {
+                console.error("Error checking device in-use status:", error);
+              }
+        };
+         onScanSuccess(code);
+    
+        } else {
+          setScannedResult("No QR code found");
+        }
+      };
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  // Trigger QR code scan for each uploaded image
+  useEffect(() => {
+    files.forEach((file) => {
+      scanQrCode(file);
+    });
+  }, [files]);
+
   return (
-   
-         <div style={styles.container}>
+    <div style={styles.container}>
       <div {...getRootProps({ style: styles.dropzone })}>
         <input {...getInputProps()} />
         {isDragActive ? (
@@ -85,11 +153,13 @@ const FileUpload = () => {
           ))}
         </ul>
       </div>
-    </div>
 
-    
+      <div>
+        <h4>Scanned Result:</h4>
+        <p>{scannedResult}</p>
+      </div>
+    </div>
   );
 };
-
 
 export default FileUpload;

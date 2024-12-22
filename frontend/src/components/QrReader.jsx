@@ -1,27 +1,45 @@
 import { useEffect, useRef, useState } from "react";
 import "./QrStyles.css";
 import QrScanner from "qr-scanner";
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const QrReader = () => {
-    // QR States
+
     const scanner = useRef(null);
     const videoEl = useRef(null);
     const qrBoxEl = useRef(null);
-    const [qrOn, setQrOn] = useState(false); // Controls QR scanner state
+    const [qrOn, setQrOn] = useState(false);
     const [scannedResult, setScannedResult] = useState("");
      const [ mode,setMode] = useState(true);
-    // Success
-    const onScanSuccess = (result) => {
+
+    const onScanSuccess = async (result) => {
         console.log(result);
         setScannedResult(result?.data);
+        const deviceId = result?.data;
+        try {
+            // Make the GET request to check if the device is in use
+            const response = await axios.get(`http://localhost:8000/device/${deviceId}/in-use`);
+            
+            if (response.status === 200 &&response.data.inUse) {
+                Swal.fire({
+                    title: "Device is in Use!",
+                    text: `You scanned ${deviceId}`,
+                    icon: "failure"
+                  });
+            } else if (response.status == 200) {
+                const response = await axios.post(`http://localhost:8000/device/${deviceId}/change-status`);
+            }
+          } catch (error) {
+            console.error("Error checking device in-use status:", error);
+          }
     };
 
-    // Fail
+
     const onScanFail = (err) => {
         console.log(err);
     };
 
-    // Start/stop QR scanner based on qrOn state
     useEffect(() => {
         if (qrOn && videoEl?.current && !scanner.current) {
             // Instantiate the QR Scanner

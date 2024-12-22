@@ -11,20 +11,8 @@ const userSchema=new Schema({
         type:String,
         required:true,
     },
-    club:{
-        type:String,
-        default:"Guest",
-    },
-    // isAdmin is either user or admin 
-    isAdmin:{
-        type:String,
-        enum:["ADMIN","USER"],
-        default:"USER",
-    },
 },{timestamps:true});
 
-// matching password and generating token 
-// Error handaling for incorrect password is missing 
 userSchema.static('matchPasswordAndGenerateToken',async function (email,password){
     const user=await this.findOne({email});
     if(!user) throw new Error("User Not Found!!");

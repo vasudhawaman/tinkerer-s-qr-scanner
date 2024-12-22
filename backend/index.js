@@ -1,32 +1,41 @@
-const express=require('express');
-const { checkForAuthenticationCookie } = require('./middlewares/auth');
-const app=express();
-const path=require('path');
-const cookieParser=require('cookie-parser');
-const mongoose=require('mongoose');
-// make this an ASYNC function named dbConnect and not .then method
-mongoose.connect("mongodb://localhost:27017/tLab").then(()=>{console.log("Server connected")});
-const userRoute=require('./routes/user');
+const express = require('express');
+const app = express();
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-//Middlewares
-app.use(express.urlencoded({extended:false}));
+// Make this an async function named dbConnect
+async function dbConnect() {
+  try {
+    await mongoose.connect("mongodb://localhost:27017/tLab");
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error.message);
+  }
+}
+
+// Call the async dbConnect function
+dbConnect();
+
+const userRoute = require('./routes/user');
+const deviceRoute = require('./routes/device');
+
+// Middleware
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(checkForAuthenticationCookie("token"));  // WE are using header-token method bearer method and not cookies. Make  those changes
-// app.use(isAdmin);
-// app.use(isUser);
 
-// No need for EJS. Use POSTMAN/thunderclient for testing 
-app.set("view engine","ejs");
-app.set("views",path.resolve("./views"));
+// CORS for localhost:3000
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow only requests from this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add any other HTTP methods you want to allow
+  credentials: true, // If you need to send cookies or authorization headers
+}));
 
-app.get("/",(req,res)=>{
-    return res.render("home",{
-        user:req.user,
-    });
-});
+// Routes
+app.use("/user", userRoute);
+app.use("/device", deviceRoute);
 
-app.use("/user",userRoute);
-
-//port make it a variable and NOT 3000 .Use port 8000
-const port = 8000 ;
-app.listen(port,()=>console.log("Server Started Successfully."));
+// Port variable
+const port = 8000;
+app.listen(port, () => console.log(`Server started successfully on port ${port}`));
