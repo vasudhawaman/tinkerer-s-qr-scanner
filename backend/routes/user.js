@@ -10,14 +10,15 @@ router.get("/dashboard",(req,res)=>{
 // USE postman/ thunder client for testing the API 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
-    try{
+    try {
         const token = await User.matchPasswordAndGenerateToken(email, password);
-        // return res.cookie("token",token).redirect("/");
-        return res.status(200).json({"token":token});
-    }
-    catch(error){
-        
-        return res.status(400).json({"message":"Not found token!","error":error});
+        return res.status(200).json({ "token": token });
+    } catch (error) {
+        return res.status(400).json({ 
+            "message": error.message || "An error occurred during login", 
+            "error": error.stack || error 
+        });
     }
 });
+
 module.exports=router;

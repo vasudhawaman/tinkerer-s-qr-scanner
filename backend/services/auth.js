@@ -9,11 +9,13 @@ function createTokenForUser(user){
         club:user.club,
     };
     const token=jwt.sign(payload,secret);
+    console.log(token);
     return token;
 }
 
 function validateToken(token){
     const payload=jwt.verify(token,secret);
+    console.log(payload);
     return payload;
 }
 

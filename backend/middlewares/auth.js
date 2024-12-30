@@ -6,10 +6,14 @@ function checkForAuthenticationCookie(cookieName) {
     if (!tokenCookieValue) {
       return next();
     }
+    
     try {
       const userPayLoad = validateToken(tokenCookieValue);
       req.user = userPayLoad;
-    } catch (error) {}
+      
+    } catch (error) {
+      // console.log(error);
+    }
       return next();
   };
 }
