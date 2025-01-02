@@ -88,19 +88,40 @@ const QrReader = () => {
     return (
         <div className="h-full md:h-3/5 w-full">
             <div className=" w-full flex items-center justify-center gap-4 p-3">
-            <button onClick={handleToggleScanner} className="bg-indigo-950 p-2 rounded-md text-white  w-1/2 md:w-1/6">
+            <button onClick={handleToggleScanner} className="bg-blue-800 hover:bg-blue-400 p-2 rounded-md text-white hover:text-blue-950  w-1/2 md:w-1/6">
                 {qrOn ? "Close QR Scanner" : "Open QR Scanner"}
             </button>
-            <button onClick={handleModeScanner} className="bg-indigo-950 p-2 rounded-md text-white w-1/2 md:w-1/6">
-                {mode ? "Back Camera" : "Front Camera"}
-            </button>
+            
 
             </div>
            
             {/* Conditionally render QR scanner */}
             {qrOn && (
-                <div className="p-5 bg-white shadow-lg rounded-md h-full w-full relative overflow-hidden">
-                    <video className="w-full h-full object-cover" ref={videoEl}></video>
+                <div className="mt-1 md:mt-7 lg:mt-10 p-5 bg-white shadow-lg rounded-md h-full w-full relative overflow-hidden">
+                    <button
+    onClick={handleToggleScanner} // Add your close handler function here
+    className="absolute top-3 right-5 text-gray-500 hover:text-gray-800"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="2"
+      stroke="currentColor"
+      className="w-6 h-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+
+                    <video className="mt-4 w-full h-4/5 object-cover" ref={videoEl}></video>
+                    <button onClick={handleModeScanner} className="bg-blue-800 hover:bg-blue-400 p-2 rounded-md text-white hover:text-blue-950 w-1/2 md:w-1/6">
+                {mode ? "Back Camera" : "Front Camera"}
+            </button>
                 </div>
             )}
 

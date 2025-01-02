@@ -1,41 +1,46 @@
-const express = require('express');
-const app = express();
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
-// Make this an async function named dbConnect
-async function dbConnect() {
-  try {
-    await mongoose.connect("mongodb://localhost:27017/tLab");
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error.message);
-  }
-}
-
-// Call the async dbConnect function
-dbConnect();
-
-const userRoute = require('./routes/user');
+const express=require('express');
+const app=express();
+const path=require('path');
+const cookieParser=require('cookie-parser');
+const passport = require('passport');
+const flash = require('connect-flash');
+const mongoose=require('mongoose');
+const session = require('express-session');
+const cors=require('cors');
+// make this an ASYNC function named dbConnect and not .then method
+mongoose.connect("mongodb://localhost:27017/tLab").then(()=>{console.log("DB connected")});
+require('./services/oauth');
+const userRoute=require('./routes/user');
 const deviceRoute = require('./routes/device');
-
-// Middleware
-app.use(express.urlencoded({ extended: false }));
+//Middlewares
+app.use(flash());
+app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
-
-// CORS for localhost:3000
-app.use(cors({
-  origin: 'http://localhost:3000', // Allow only requests from this origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add any other HTTP methods you want to allow
-  credentials: true, // If you need to send cookies or authorization headers
+app.use(session({
+  secret: 'mysecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+       secure:true,
+       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  }
 }));
 
-// Routes
-app.use("/user", userRoute);
-app.use("/device", deviceRoute);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cors('http://localhost:3000/'));
 
-// Port variable
-const port = 8000;
-app.listen(port, () => console.log(`Server started successfully on port ${port}`));
+app.use("/user",userRoute);
+app.use('/device',deviceRoute);
+
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/error',failureMessage: true }),
+  (req, res) => {
+       const {authToken}=req.user;
+       res.redirect(`http://localhost:3000/scan?token=${authToken}`);
+  });
+const port = 8000 ;
+app.listen(port,()=>console.log("Server Started Successfully."));

@@ -35,9 +35,13 @@ const FileUpload = () => {
       borderRadius: '10px',
       borderColor: 'white',
       borderStyle: 'dashed',
-      backgroundColor: '#2c5282',
+      backgroundColor: 'rgb(111, 165, 241)',
       color: 'white',
       cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+    },
+    dropzoneHover: {
+      backgroundColor: 'rgb(81, 135, 211)', // Darker shade for hover effect
     },
     preview: {
       marginTop: '20px',
