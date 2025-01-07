@@ -101,8 +101,13 @@ const FileUpload = () => {
             //console.log(result);
             const deviceId = code.data;
             try {
+              const token = localStorage.getItem("token"); 
                 // Make the GET request to check if the device is in use
-                const response = await axios.get(`http://localhost:8000/device/${deviceId}/in-use`);
+                const response = await axios.get(`http://localhost:8000/device/${deviceId}/in-use`,{
+                  headers: {
+                    Authorization: token, // Include the token in the header
+                  },
+                });
                 console.log(response);
 
                 // Handle the response
@@ -110,10 +115,15 @@ const FileUpload = () => {
                     Swal.fire({
                         title: "Device is in Use!",
                         text: `You scanned ${deviceId}`,
-                        icon: "failure"
+                        icon: "error"
                       });
                 } else if (response.status == 200) {
-                    const response = await axios.post(`http://localhost:8000/device/${deviceId}/change-status`);
+                  const token = localStorage.getItem("token"); 
+                    const response = await axios.post(`http://localhost:8000/device/${deviceId}/change-status`,{
+                      headers: {
+                        Authorization: token, // Include the token in the header
+                      },
+                    });
                 }
               } catch (error) {
                 console.error("Error checking device in-use status:", error);

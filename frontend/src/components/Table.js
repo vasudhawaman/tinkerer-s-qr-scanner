@@ -57,14 +57,14 @@ const conditionalRowStyles = [
   {
     when: row => row.inUse === 'true',
     style: {
-      backgroundColor: 'green',  // Red when inUse is 'yes' and even row
-      color: '#ffffff',
+      backgroundColor: '#79eb79',  // Red when inUse is 'yes' and even row
+      color: '#000000',
     },
   },
   {
     when: row => row.inUse !== 'true',
     style: {
-      backgroundColor: 'red',  // Green when inUse is not 'yes' and even row
+      backgroundColor: '#d94141',  // Green when inUse is not 'yes' and even row
       color: '#ffffff',
     },
   },
@@ -73,18 +73,14 @@ const conditionalRowStyles = [
 
     return (
         <div className="container mt-1 min-w-screen overflow-x-auto">
-            <input
-                type="search"
-                className="w-full border border-grey-400 rounded-xl p-2 hover:border-blue-700 focus:border-grey-100 appearance-none cursor-pointer max-h-16"
-                placeholder="Search"
-            />
+
             <DataTable
                 columns={columns}
                 data={rows}
                 pagination
                 selectableRows
                 fixedHeader
-                title="Previous Records"
+                title="All Devices in use"
                 conditionalRowStyles={conditionalRowStyles}
                 
             />
