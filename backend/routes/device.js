@@ -43,13 +43,15 @@ router.get('/all', checkForAuthenticationHeader(),async (req, res) => {
         });
     }
 });
-router.post("/:deviceId/change-status", checkForAuthenticationHeader(),async (req, res) => {
+router.get("/:deviceId/change-status", checkForAuthenticationHeader(),async (req, res) => {
     const { deviceId } = req.params;
 
     try {
         // Find the device by its deviceId
         const device = await Device.findOne({ deviceId });
-        const user = await User.findOne({email : req.user.email});
+        console.log("change-status",req.user);
+        const user = await User.findOne({email : req.user.user.email});
+        console.log("does user",user);
         // If the device is not found, return an error
         if (!device) {
             return res.status(404).json({ message: "Device not found" });
@@ -61,7 +63,9 @@ router.post("/:deviceId/change-status", checkForAuthenticationHeader(),async (re
         }
 
         // Update the device's status to 'in use'
-        device.inUse = "true"; // Set the status to 'in use'
+        device.inUse = "true"; 
+        device.lastUsed = user._id;
+        device.userName = user.name;// Set the status to 'in use'
         await device.save(); // Save the changes to the database
          const newUsage = new Usage({
             deviceId : device.deviceId,
@@ -93,7 +97,9 @@ router.get("/:deviceId/out-of-use",checkForAuthenticationHeader(),async (req, re
         }
 
         // Update the device's status to 'in use'
-        device.inUse = "false"; // Set the status to 'in use'
+        device.inUse = "false";
+        device.lastUsed ="";
+        device.userName =""; // Set the status to 'in use'
         await device.save(); // Save the changes to the database
          const newUsage = new Usage({
             deviceId : device.deviceId,

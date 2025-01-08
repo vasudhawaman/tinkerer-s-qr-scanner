@@ -108,7 +108,7 @@ const FileUpload = () => {
                     Authorization: token, // Include the token in the header
                   },
                 });
-                console.log(response);
+                console.log("devicein use",response);
 
                 // Handle the response
                 if (response.status === 200 &&response.data.inUse) {
@@ -119,7 +119,7 @@ const FileUpload = () => {
                       });
                 } else if (response.status == 200) {
                   const token = localStorage.getItem("token"); 
-                    const response = await axios.post(`http://localhost:8000/device/${deviceId}/change-status`,{
+                    const response = await axios.get(`http://localhost:8000/device/${deviceId}/change-status`,{
                       headers: {
                         Authorization: token, // Include the token in the header
                       },

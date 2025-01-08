@@ -1,11 +1,17 @@
 const {Router}=require('express');
 const router=Router();
 const User=require("../model/user");
+const { checkForAuthenticationHeader } = require('../middlewares/auth');
 
-router.get("/dashboard",(req,res)=>{
-    return res.send("AdminDashBoard");
+router.get('/info',checkForAuthenticationHeader(),async (req,res)=>{
+    try{
+          const email = req.user.user.email;
+          const user = await User.find({email:email});
+          res.status(200).json({user:user});
+    }catch(err){
+            res.status(500).json({error : err});
+    }
 });
-
 // make all API routes using status codes and json response not rendering EJS.
 // USE postman/ thunder client for testing the API 
 router.post("/login", async (req, res) => {

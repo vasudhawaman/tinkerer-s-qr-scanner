@@ -39,7 +39,7 @@ function App() {
             alt="Tinkerer's Lab Logo"
           />
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white text-gray-900 max-w-xs md:max-w-none">
-            Tinkerer's Lab<sub>IIT Indore</sub>
+            Tinkerer's Lab
           </span>
         </a>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">

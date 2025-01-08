@@ -20,7 +20,11 @@ const deviceSchema=new Schema({
     lastUsed:{
         type:String,
         required:false,
-    }
+    },
+    userName:{
+        type:String,
+        required:false,
+    },
 },{timestamps:true});
 
 const Device = model("Device", deviceSchema);

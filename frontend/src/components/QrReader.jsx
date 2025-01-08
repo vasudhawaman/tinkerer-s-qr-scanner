@@ -3,7 +3,7 @@ import "./QrStyles.css";
 import QrScanner from "qr-scanner";
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
+import { useNavigate } from 'react-router-dom';
 const QrReader = () => {
 
     const scanner = useRef(null);
