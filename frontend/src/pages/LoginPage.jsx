@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import img from '../assets/1.jpg';
 import Navbar from "../components/Navbar";
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,7 +7,17 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [token, setToken] = useState(false);
+  const navigate=useNavigate();
+  useEffect(() => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        setToken(true); 
+      }
+    }, []);
+    if(token){
+      navigate('/scan')
+    }
   const handleLogin = async () => {
     setLoading(true);
     setError('');
