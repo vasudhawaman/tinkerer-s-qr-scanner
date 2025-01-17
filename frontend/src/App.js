@@ -11,10 +11,11 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path='/devices' element={<Devices/>}/>
+        <Route path='/device' element={<Devices/>}/>
         <Route path="/" element={<Login/>} />
         <Route path="/scan" element ={<Home />} />
         <Route path="/table" element ={<DashBoard />} />
+        <Route path="/devices" element={<Devices/>} />
         <Route path='*' element={<ErrorPage/>}/>
       </Routes>
     </Router>

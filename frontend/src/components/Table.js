@@ -55,10 +55,20 @@ export default function Table() {
     }
       const columns = [
         {
-            name: "Device ID",
-            selector: (row) => row.deviceId,
-            sortable: true,
-        },
+          name: "Device ID",
+          selector: (row) => (
+              <a 
+                href={`/device?device=${row.deviceId}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-white hover:text-blue-50 underline"
+              >
+                {row.deviceId}
+              </a>
+          ),
+          sortable: true,
+      }
+      ,
         {
             name: "Device Name",
             selector: (row) => row.name,

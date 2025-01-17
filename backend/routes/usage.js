@@ -1,10 +1,11 @@
 const Device = require("../model/device");
 const Usage = require("../model/usage");
 const User = require("../model/user");
+const express = require("express");
 const router = express.Router();
 const { checkForAuthenticationHeader } = require("../middlewares/auth"); 
 
-router.get('/:deviceId/all', checkForAuthenticationHeader(),async (req, res) => {
+router.get('/:deviceId/all',async (req, res) => {
     try {
         // Fetch all devices from the database
         const deviceId = req.params.deviceId;
@@ -24,3 +25,5 @@ router.get('/:deviceId/all', checkForAuthenticationHeader(),async (req, res) => 
         });
     }
 });
+
+module.exports = router;

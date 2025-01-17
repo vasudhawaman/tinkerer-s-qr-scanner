@@ -113,5 +113,23 @@ router.get("/:deviceId/out-of-use",checkForAuthenticationHeader(),async (req, re
         res.status(500).json({ message: "Internal server error", error });
     }
 });
+router.get("/:deviceId/info",checkForAuthenticationHeader(),async (req, res) => {
+    const { deviceId } = req.params;
 
+    try {
+        // Find the device by its deviceId
+        const device = await Device.findOne({ deviceId });
+        
+        // If the device is not found, return an error
+        if (!device) {
+            return res.status(404).json({ message: "Device not found" });
+        }
+
+
+        res.status(200).json({success:true,device : device});
+    } catch (error) {
+        console.error("Error changing device status:", error);
+        res.status(500).json({ message: "Internal server error", error });
+    }
+});
 module.exports = router;

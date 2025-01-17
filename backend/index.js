@@ -12,6 +12,7 @@ mongoose.connect("mongodb://localhost:27017/tLab").then(()=>{console.log("DB con
 require('./services/oauth');
 const userRoute=require('./routes/user');
 const deviceRoute = require('./routes/device');
+const usageRoute = require('./routes/usage');
 //Middlewares
 app.use(flash());
 app.use(express.urlencoded({extended:false}));
@@ -32,7 +33,7 @@ app.use(cors('http://localhost:3000/'));
 
 app.use("/user",userRoute);
 app.use('/device',deviceRoute);
-
+app.use("/usage",usageRoute);
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
 
